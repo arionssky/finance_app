@@ -121,7 +121,7 @@ class _WalletPageState extends State<WalletPage>
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const ConnectWalletPage()),
+                              MaterialPageRoute(builder: (context) =>  ConnectWalletPage()),
                             );
                           },
                           child: Column(
