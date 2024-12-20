@@ -8,7 +8,6 @@ import '../../common/extensions/sizes.dart';
 import '../../common/widgets/app_header.dart';
 import '../../common/widgets/base_page.dart';
 import '../../common/widgets/custom_circular_progress_indicator.dart';
-import '../../common/widgets/notification_widget.dart';
 import '../../common/widgets/transaction_listview/transaction_listview.dart';
 import '../../locator.dart';
 import '../home/home_controller.dart';
@@ -28,7 +27,7 @@ class WalletPage extends StatefulWidget {
 class _WalletPageState extends State<WalletPage>
     with SingleTickerProviderStateMixin, CustomModalSheetMixin {
   final walletController = locator.get<WalletController>();
-  final ballanceController = locator.get<BalanceCardWidgetController>();
+  final balanceController = locator.get<BalanceCardWidgetController>();
   late final TabController _tabController;
 
   @override
@@ -39,7 +38,7 @@ class _WalletPageState extends State<WalletPage>
       vsync: this,
     );
     walletController.getAllTransactions();
-    ballanceController.getBalances();
+    balanceController.getBalances();
 
     walletController.addListener(() {
       if (walletController.state is WalletStateError) {
@@ -75,7 +74,7 @@ class _WalletPageState extends State<WalletPage>
       child: Stack(
         children: [
           AppHeader(
-            title: 'Түрийвч',
+            title: 'Түрийвч', // Wallet
             onPressed: () {
               locator.get<HomeController>().pageController.jumpToPage(0);
             },
@@ -95,186 +94,74 @@ class _WalletPageState extends State<WalletPage>
                 child: Column(
                   children: [
                     Text(
-                      'Нийт үлдэгдэл',
+                      'Нийт үлдэгдэл', // Total Balance
                       style: AppTextStyles.inputLabelText
                           .apply(color: AppColors.grey),
                     ),
                     const SizedBox(height: 8.0),
                     AnimatedBuilder(
-                        animation: ballanceController,
+                        animation: balanceController,
                         builder: (context, _) {
-                          if (ballanceController.state
-                              is BalanceCardWidgetStateLoading) {
+                          if (balanceController.state
+                          is BalanceCardWidgetStateLoading) {
                             return const CustomCircularProgressIndicator();
                           }
                           return Text(
-                            '\$ ${ballanceController.balances.totalBalance.toStringAsFixed(2)}',
+                            '\$ ${balanceController.balances.totalBalance.toStringAsFixed(2)}',
                             style: AppTextStyles.mediumText30
                                 .apply(color: AppColors.blackGrey),
                           );
                         }),
                     const SizedBox(height: 24.0),
+                    // Action Buttons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) =>  ConnectWalletPage()),
-                            );
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: AppColors.iceWhite,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(Icons.add, color: AppColors.green, size: 24),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Нэмэх',
-                                style: AppTextStyles.mediumText18.apply(color: AppColors.blackGrey),
-                              ),
-                            ],
+                        _buildActionButton(
+                          context,
+                          icon: Icons.add,
+                          label: 'Нэмэх', // Add
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ConnectWalletPage()),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            // Handle "Pay" action
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: AppColors.iceWhite,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(Icons.payment, color: AppColors.green, size: 24),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Төлөх',
-                                style: AppTextStyles.mediumText18.apply(color: AppColors.blackGrey),
-                              ),
-                            ],
-                          ),
+                        _buildActionButton(
+                          context,
+                          icon: Icons.payment,
+                          label: 'Төлөх', // Pay
+                          onTap: () {},
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            // Handle "Send" action
-                          },
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: AppColors.iceWhite,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(Icons.send, color: AppColors.green, size: 24),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Илгээх',
-                                style: AppTextStyles.mediumText18.apply(color: AppColors.blackGrey),
-                              ),
-                            ],
-                          ),
+                        _buildActionButton(
+                          context,
+                          icon: Icons.send,
+                          label: 'Илгээх', // Send
+                          onTap: () {},
                         ),
                       ],
                     ),
-                    
                     const SizedBox(height: 24.0),
-                    StatefulBuilder(
-                      builder: (context, setState) {
-                        return TabBar(
-                          labelPadding: EdgeInsets.zero,
-                          controller: _tabController,
-                          onTap: (_) {
-                            if (_tabController.indexIsChanging) {
-                              setState(() {});
-                            }
-                          },
-                          tabs: [
-                            Tab(
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: _tabController.index == 0
-                                      ? AppColors.iceWhite
-                                      : AppColors.white,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(24.0),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Гүйлгээнүүд',
-                                  style: AppTextStyles.mediumText16w500
-                                      .apply(color: AppColors.darkGrey),
-                                ),
-                              ),
-                            ),
-                            Tab(
-                              child: Container(
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: _tabController.index == 1
-                                      ? AppColors.iceWhite
-                                      : AppColors.white,
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(24.0),
-                                  ),
-                                ),
-                                child: Text(
-                                  'Хүлээгдэж буй гүйлгээ',
-                                  style: AppTextStyles.mediumText16w500
-                                      .apply(color: AppColors.darkGrey),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                    // Tab Bar
+                    TabBar(
+                      controller: _tabController,
+                      indicatorColor: AppColors.green,
+                      labelColor: AppColors.green,
+                      unselectedLabelColor: AppColors.darkGrey,
+                      tabs: [
+                        Tab(text: 'Гүйлгээнүүд'), // Transactions
+                        Tab(text: 'Хүлээгдэж буй гүйлгээ'), // Upcoming Transactions
+                      ],
                     ),
-                    const SizedBox(height: 32.0),
+                    const SizedBox(height: 16.0),
+                    // Transactions or Upcoming Transactions
                     Expanded(
-                      child: AnimatedBuilder(
-                        animation: walletController,
-                        builder: (context, _) {
-                          if (walletController.state is WalletStateLoading) {
-                            return const CustomCircularProgressIndicator(
-                              color: AppColors.green,
-                            );
-                          }
-                          if (walletController.state is WalletStateError) {
-                            return const Center(
-                              child: Text('An error has occurred'),
-                            );
-                          }
-                          if (walletController.state is WalletStateSuccess &&
-                              walletController.transactions.isNotEmpty) {
-                            return TransactionListView(
-                              transactionList: walletController.transactions,
-                              itemCount: walletController.transactions.length,
-                              isLoading: walletController.isLoading,
-                              onLoading: (value) {
-                                if (value) {
-                                  walletController.fetchMore;
-                                }
-                              },
-                            );
-                          }
-                          return const Center(
-                            child:
-                                Text('Гүйлгээ хийгдээгүй байна.'),
-                          );
-                        },
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildTransactionListView(), // Transactions
+                          _buildUpcomingTransactionListView(), // Upcoming Transactions
+                        ],
                       ),
                     ),
                   ],
@@ -284,6 +171,111 @@ class _WalletPageState extends State<WalletPage>
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildActionButton(BuildContext context,
+      {required IconData icon,
+        required String label,
+        required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.iceWhite,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: AppColors.green, size: 24),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: AppTextStyles.mediumText18.apply(color: AppColors.blackGrey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTransactionListView() {
+    return AnimatedBuilder(
+      animation: walletController,
+      builder: (context, _) {
+        if (walletController.state is WalletStateLoading) {
+          return const CustomCircularProgressIndicator(
+            color: AppColors.green,
+          );
+        }
+        if (walletController.state is WalletStateError) {
+          return const Center(
+            child: Text('An error has occurred'),
+          );
+        }
+        if (walletController.state is WalletStateSuccess &&
+            walletController.transactions.isNotEmpty) {
+          return TransactionListView(
+            transactionList: walletController.transactions,
+            itemCount: walletController.transactions.length,
+            isLoading: walletController.isLoading,
+            onLoading: (value) {
+              if (value) {
+                walletController.fetchMore;
+              }
+            },
+          );
+        }
+        return const Center(
+          child: Text('Гүйлгээ хийгдээгүй байна.'), // No Transactions
+        );
+      },
+    );
+  }
+
+  Widget _buildUpcomingTransactionListView() {
+    // Temporary upcoming transactions list for UI
+    final upcomingTransactions = [
+      {
+        'icon': Icons.phone,
+        'title': 'Phone Bill',
+        'date': 'Apr 5, 2022',
+        'amount': '\$40.00',
+      },
+      {
+        'icon': Icons.subscriptions,
+        'title': 'Netflix',
+        'date': 'Apr 10, 2022',
+        'amount': '\$12.99',
+      },
+      {
+        'icon': Icons.car_rental,
+        'title': 'Car Loan',
+        'date': 'Apr 15, 2022',
+        'amount': '\$300.00',
+      },
+    ];
+
+    return ListView.builder(
+      itemCount: upcomingTransactions.length,
+      itemBuilder: (context, index) {
+        final transaction = upcomingTransactions[index];
+        return ListTile(
+          leading: CircleAvatar(
+            backgroundColor: AppColors.iceWhite,
+            child: Icon(transaction['icon'] as IconData, color: AppColors.green),
+          ),
+          title: Text(transaction['title'] as String,
+              style: AppTextStyles.mediumText18),
+          subtitle: Text(transaction['date'] as String,
+              style: AppTextStyles.smallText13),
+          trailing: Text(
+            transaction['amount'] as String,
+            style: AppTextStyles.mediumText18.apply(color: AppColors.green),
+          ),
+        );
+      },
     );
   }
 }
