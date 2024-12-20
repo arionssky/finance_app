@@ -13,7 +13,7 @@ class GeneralException extends Failure {
   const GeneralException();
 
   @override
-  String get message => 'An error has occurred. Please try again later.';
+  String get message => 'Алдаа гарлаа. Дараа дахин оролдоно уу.';
 }
 
 //API Exceptions
@@ -33,22 +33,22 @@ class APIException extends Failure {
       switch (textCode) {
         case 'invalid-headers':
         case 'validation-failed':
-          return 'Bad request. Check you request and try again.';
+          return 'Буруу хүсэлт. Хүсэлтээ шалгаж, дахин оролдоно уу.';
         default:
-          return 'An internal error ocurred. Please try again later.';
+          return 'Дотоод алдаа гарлаа. Дараа дахин оролдоно уу.';
       }
     }
     switch (code) {
       case 400:
-        return 'Bad request. Check you request and try again.';
+        return 'Буруу хүсэлт. Хүсэлтээ шалгаж, дахин оролдоно уу.';
       case 401:
-        return 'User not authorized to access this resource at this time. Please reauthenticate';
+        return 'Энэ нөөцөд хандах эрхгүй байна. Та дахин нэвтрэх хэрэгтэй.';
       case 404:
-        return 'It was not possible to finish this operation. Please try again later';
+        return 'Энэ үйлдлийг дуусгаж чадсангүй. Дараа дахин оролдоно уу.';
       case 503:
-        return 'Service unavailable at this time. Please try again later.';
+        return 'Үйлчилгээ одоогоор боломжгүй байна. Дараа дахин оролдоно уу.';
       default:
-        return 'An internal error ocurred. Please try again later.';
+        return 'Дотоод алдаа гарлаа. Дараа дахин оролдоно уу.';
     }
   }
 }
@@ -68,20 +68,20 @@ class AuthException extends Failure {
       case 'invalid-jwt':
       case 'invalid-headers':
       case 'user-not-authenticated':
-        return 'Your session has expired. Please loggin again.';
+        return 'Таны сесс дууссан байна. Дахин нэвтэрнэ үү.';
       case 'email-already-exists':
-        return 'The provided email is already in use. Please check your information or create a new account.';
+        return 'Оруулсан имэйл аль хэдийн ашиглагдаж байна. Өөр мэдээлэл оруулах эсвэл шинэ бүртгэл үүсгэнэ үү.';
       case 'user-not-found':
       case 'wrong-password':
-        return 'Email or password are incorrect. Please check your information or create a new account.';
+        return 'Имэйл эсвэл нууц үг буруу байна. Мэдээллээ шалгаж эсвэл шинэ бүртгэл үүсгэнэ үү.';
       case 'network-request-failed':
-        return 'It was not possible to connect to the remote server. Please check you connection and try again.';
+        return 'Алсын сервертэй холбогдож чадсангүй. Холболтоо шалгаж, дахин оролдоно уу.';
       case 'too-many-requests':
-        return 'Due to consecutive failed attempts, you cannot login at this time. Please try again in a few moments.';
+        return 'Олон удаагийн алдаатай оролдлогын улмаас та одоогоор нэвтэрч чадахгүй байна. Түр хүлээгээд дахин оролдоно уу.';
       case 'internal':
-        return 'It was not possible to create your account at this time. Please check your information and try again.';
+        return 'Таны бүртгэлийг үүсгэж чадсангүй. Мэдээллээ шалгаж, дахин оролдоно уу.';
       default:
-        return 'There was an error while authenticating. Please try again later.';
+        return 'Нэвтрэх үед алдаа гарлаа. Дараа дахин оролдоно уу.';
     }
   }
 }
@@ -90,14 +90,14 @@ class SecureStorageException extends Failure {
   const SecureStorageException();
 
   @override
-  String get message => 'An error has occurred while fetching Secure Storage.';
+  String get message => 'Нууц хадгалагдсан мэдээлэл авахад алдаа гарлаа.';
 }
 
 class CacheException extends Failure {
   const CacheException();
 
   @override
-  String get message => 'An error has occurred while fetching Local Cache.';
+  String get message => 'Орон нутгийн сангаас мэдээлэл авахад алдаа гарлаа.';
 }
 
 //System Exceptions
@@ -112,9 +112,9 @@ class ConnectionException extends Failure {
   String get message {
     switch (code) {
       case 'connection-error':
-        return 'It was not possible to connect to the remote server. Please check you connection and try again.';
+        return 'Алсын сервертэй холбогдож чадсангүй. Холболтоо шалгаж, дахин оролдоно уу.';
       default:
-        return 'An internal error ocurred. Please try again later.';
+        return 'Дотоод алдаа гарлаа. Дараа дахин оролдоно уу.';
     }
   }
 }
